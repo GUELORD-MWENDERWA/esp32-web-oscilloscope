@@ -8,6 +8,10 @@ A single-channel digital oscilloscope built from an ESP32 and a browser. The fir
 
 It turns a few dollars of hardware into a usable teaching instrument for audio-frequency signals, PWM outputs, RC charge curves and 555 timer circuits.
 
+![ESP32 Web Oscilloscope interface](docs/images/web_ui.png)
+
+*The browser interface served by the firmware. For this image the page from `src/web_ui.cpp` was rendered with a simulated capture (250 Hz PWM through an RC filter) in place of the ESP32; the measurements are computed by the page itself. Regenerate with `python docs/make_screenshot.py`.*
+
 ## Features
 
 - Paced sampling from 100 S/s to 50 kS/s with 12-bit resolution
@@ -57,6 +61,17 @@ pio device monitor
 The serial monitor prints the address to open. Without `secrets.h`, connect to the `ESP32-Scope` access point (password `scope1234`, change it in `include/config.h`) and browse to `http://192.168.4.1/`.
 
 To check the setup, connect GPIO34 to GPIO25: the display shows a 1 kHz square wave with a duty cycle close to 50 %.
+
+### Prebuilt firmware
+
+Each [release](https://github.com/GUELORD-MWENDERWA/esp32-web-oscilloscope/releases/latest) contains `esp32-web-oscilloscope-esp32dev.bin`, a single image (bootloader, partition table and application) for any ESP32 DevKit. Flash it without installing PlatformIO:
+
+```bash
+pip install esptool
+esptool.py --chip esp32 --port /dev/ttyUSB0 write_flash 0x0 esp32-web-oscilloscope-esp32dev.bin
+```
+
+From a browser, the same file can be flashed at offset `0x0` with the [ESP Tool web flasher](https://espressif.github.io/esptool-js/).
 
 ## HTTP API
 
